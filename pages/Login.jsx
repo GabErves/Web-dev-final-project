@@ -1,8 +1,14 @@
 import Header from "@/components/Header";
 import React from "react";
 import '../app/globals.css';
+import {useState} from 'react';
 
 const Login = () => {
+  
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+ 
+
   return <div class="bg-gray-50 dark:bg-gray-900">
   <Header/>
 

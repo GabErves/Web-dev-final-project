@@ -2,8 +2,15 @@ import Header from "@/components/Header";
 import React from "react";
 import Login from "./Login";
 import '../app/globals.css';
+import {useState} from 'react';
 
 const Register = () => {
+  const [fname, setFname] = useState("");
+  const [lname, setLname] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
+
   return <div class="bg-gray-50 dark:bg-gray-900">
   <Header/>
   <section class="bg-gray-50 dark:bg-gray-900">

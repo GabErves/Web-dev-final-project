@@ -1,6 +1,9 @@
 import Header from "@/components/Header";
 import React from "react";
 import '../app/globals.css';
+import './pages.css';
+import Image from "next/image";
+import Monogram from '../images/GE.png'
 
 const About = () => {
   return <div>
@@ -12,6 +15,7 @@ const About = () => {
         <p class="text-2xl italic font-medium text-gray-900 dark:text-white">"Welcome to Listomania, your ultimate destination for creating and managing virtual lists! Whether you're organizing your favorite movies, planning your dream vacation itinerary, or compiling a list of must-read books, Listomania provides the perfect platform to bring your lists to life. With our user-friendly interface, you can easily create, edit, and share your lists with friends, family, or the entire online community. Unleash your creativity, stay organized, and discover new possibilities as you dive into the world of Listomania, where your lists are only limited by your imagination."</p>
     </blockquote>
     <figcaption class="flex items-center justify-center mt-6 space-x-3">
+    <Image  class="w-6 h-6 rounded-full" src={Monogram} alt={'Monogram'} height="120" width="120" />
         <img class="w-6 h-6 rounded-full" src="https://cdn.shopify.com/s/files/1/0348/0017/3195/products/Monogram-Couture-G-S-2_7285d7fb-d41d-4341-8e9d-3a3118590811.png?v=1629922545" alt="profile picture"/>
         <div class="flex items-center divide-x-2 divide-gray-500 dark:divide-gray-700">
             <cite class="pr-3 font-medium text-gray-900 dark:text-white">Listomania Team</cite>
@@ -19,6 +23,11 @@ const About = () => {
         </div>
     </figcaption>
 </figure>
+
+<div className="song" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+  <iframe style={{ borderRadius: '12px' }} src="https://open.spotify.com/embed/track/7fmJGzyvOcbh6UANsH8Cp6?utm_source=generator" width="50%" height="352" frameBorder="0" allowFullScreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+</div>
+
 
   </div>;
 };

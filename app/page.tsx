@@ -12,8 +12,8 @@ export default function Home() {
 
   return (
     <main>
-      <Header />
-      {/* <HomePage/> */}
+      {/* <Header /> */}
+      <HomePage/>
       {/* <Login />
       <Register /> */}
     </main>

@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import React from "react";
 import Login from "./Login";
 import '../app/globals.css';
+import './pages.css';
 import {useState} from 'react';
 
 const Register = () => {
@@ -13,7 +14,7 @@ const Register = () => {
 
   return <div class="bg-gray-50 dark:bg-gray-900">
   <Header/>
-  <section class="bg-gray-50 dark:bg-gray-900">
+  <section className="bg-gray-50 dark:bg-gray-900 padd">
   <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
       <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
@@ -37,6 +38,10 @@ const Register = () => {
                   <div>
                       <label for="tel" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your Phone Number</label>
                       <input type="tel" name="tel" id="tel" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="123-456-7890" required=""/>
+                  </div>
+                  <div>
+                      <label for="username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Username</label>
+                      <input type="text" name="username" id="username" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="123-456-7890" required=""/>
                   </div>
                   <div>
                       <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>

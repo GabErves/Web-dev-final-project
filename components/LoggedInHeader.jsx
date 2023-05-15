@@ -1,29 +1,29 @@
 import Link from 'next/link';
 import {useState, useEffect} from 'react';
+import { useRouter } from 'next/router';
 import Image from "next/image";
 import ListIcon from '../images/List-4.png'
 import '../app/globals.css';
 import './Header.css';
 import { getCurrentUser, logoutUser } from '../utils/data.js';
 
+
 import React from "react";
 
 const LoggedInHeader = () => {
     const [navbarOpen, setNavbarOpen] = useState(false);
     const [firstName, setFirstName] = useState('');
+    
 
     const handleLogout = async () => {
         const result = await logoutUser();
-    
+      
         if (result.success) {
-         
-          window.location.href = '/Login';
+          router.push('/Login');
         } else {
-        
           console.error('Logout error:', result.message);
         }
       };
-    
 
     useEffect(() => {
         const fetchCurrentUser = async () => {

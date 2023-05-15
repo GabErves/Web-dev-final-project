@@ -1,9 +1,10 @@
+"use client";
 import React from "react";
 import '../app/globals.css';
 import './pages.css';
 import LoggedInHeader from "@/components/LoggedInHeader";
 
-const Create = () => {
+const CreateList = () => {
   return <div>
   <LoggedInHeader/>
     <section class="bg-white dark:bg-gray-900">
@@ -47,4 +48,4 @@ const Create = () => {
   </div>;
 };
 
-export default Create;
+export default CreateList;

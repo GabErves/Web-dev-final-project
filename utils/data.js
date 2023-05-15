@@ -100,4 +100,51 @@ const registerUser = async (
   };
 };
 
-export { getCurrentUser, registerUser };
+/**
+ * Log in a user
+ * @param {*} email
+ * @param {*} password
+ * @returns plain old javascript object with success, message and optionally, the rest of the addMetaResponse.data object
+ *
+ * NOTE, it previously responded with error as the name of the key, it was renamed to message
+ * for consistency
+ */
+const loginUser = async (email, password) => {
+  const authResponse = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  if (authResponse.error) {
+    return {
+      success: false,
+      message: authResponse.error,
+    };
+  }
+
+  if (authResponse.data.user) {
+    const meta = await supabase
+      .from("profile")
+      .select("*")
+      .eq("user_id", authResponse.data.user.id);
+
+    if (meta.error) {
+      return {
+        success: false,
+        message: meta.error,
+      };
+    }
+    return {
+      ...authResponse,
+      meta,
+      success: true,
+    };
+  }
+
+  return {
+    success: false,
+    message: "An unknown error has occurred",
+  };
+};
+
+export { getCurrentUser, loginUser, registerUser };

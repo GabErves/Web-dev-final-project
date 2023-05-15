@@ -8,7 +8,7 @@ import { registerUser } from "../utils/data";
 import { useReducer } from "react";
 import { useRouter } from "next/navigation";
 
-const User = () => {
+const UserList = () => {
   return (
     <>
       <p>User Page</p>
@@ -16,4 +16,4 @@ const User = () => {
   );
 };
 
-export default User;
+export default UserList;

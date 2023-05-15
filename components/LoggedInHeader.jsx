@@ -1,14 +1,32 @@
 import Link from 'next/link';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import Image from "next/image";
 import ListIcon from '../images/List-4.png'
 import '../app/globals.css';
 import './Header.css';
+import { getCurrentUser } from '../utils/data.js';
 
 import React from "react";
 
 const LoggedInHeader = () => {
     const [navbarOpen, setNavbarOpen] = useState(false);
+    const [firstName, setFirstName] = useState('');
+
+    useEffect(() => {
+        const fetchCurrentUser = async () => {
+          const { data, error } = await getCurrentUser();
+    
+          if (data) {
+            setFirstName(data.ListoMeta?.first_name || '');
+          } else {
+            console.log('Error fetching current user:', error);
+          }
+        };
+    
+        fetchCurrentUser();
+      }, []);
+    
+
   
     return (
       <div>
@@ -43,7 +61,7 @@ const LoggedInHeader = () => {
                     className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
                     href="/HomePage"
                   >
-                    <i className="fab fa-facebook-square text-lg leading-lg text-white opacity-75"></i><span className="ml-2">Home</span>
+                    <i className="fab fa-facebook-square text-lg leading-lg text-white opacity-75"></i><span className="ml-2">Welcome, {firstName}</span>
                   </a>
                 </li>
                 <li className="nav-item">

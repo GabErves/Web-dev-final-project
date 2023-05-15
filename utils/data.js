@@ -1,31 +1,47 @@
 import supabase from "./supabase";
 
+
 const getCurrentUser = async () => {
-  // grab the session from supabase (which handles all authentication)
-  const session = await supabase.auth.getSession();
-  // if a user property exists in the session.data.session object
-  if (session?.data?.session?.user) {
+     // grab the session from supabase (which handles all authentication)
+    const session = await supabase.auth.getSession();
+    // if a user property exists in the session.data.session object
+  
+    if (session?.data?.session?.user) {
     //grab from the meta table we created for the current logged
     // in user, and attach it to the user object under the key
     // barge meta, this is so we can access for the current user's
     // name and slug
-    const { data, error } = await supabase
-      .from("profile")
-      .select("*")
-      .eq("user_id", session.data.session.user.id)
-      .single();
+      const { data, error } = await supabase
+        .from("profile")
+        .select("*")
+        .eq("user_id", session.data.session.user.id)
+        .single();
     // here we take the user from the session.data.session
     // object and attach to it a property bargeMeta
     // that holds the name and slug (and some other info
     // that is not important)
-    const user = { ...session.data.session.user, ListoMeta: data };
+  
+      if (error) {
+        return {
+          data: null,
+          error: error.message,
+        };
+      }
+  
+      const user = {...session.data.session.user,ListoMeta: data,};
+  
+      return {
+        data: user,
+        error: null,
+      };
+    }
+  
     return {
-      data: user,
-      error,
+      data: null,
+      error: null,
     };
-  }
-  return null;
-};
+  };
+  
 
 // register a user//
 /**
@@ -146,5 +162,6 @@ const loginUser = async (email, password) => {
     message: "An unknown error has occurred",
   };
 };
+
 
 export { getCurrentUser, loginUser, registerUser };

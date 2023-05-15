@@ -7,9 +7,10 @@ import { useState } from "react";
 import { registerUser } from "../utils/data";
 import { useReducer } from "react";
 import { useRouter } from "next/navigation";
-//import useUserMustBeLogged from "csc-start/hooks/useUserMustBeLogged";
+import useUserMustBeLogged from "../hooks/userUserMustBeLogged";
 
 const Register = () => {
+  useUserMustBeLogged("out", "/User");
   const router = useRouter();
   //   const [fname, setFname] = useState("");
   //   const [lname, setLname] = useState("");

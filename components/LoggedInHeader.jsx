@@ -4,13 +4,27 @@ import Image from "next/image";
 import ListIcon from '../images/List-4.png'
 import '../app/globals.css';
 import './Header.css';
-import { getCurrentUser } from '../utils/data.js';
+import { getCurrentUser, logoutUser } from '../utils/data.js';
 
 import React from "react";
 
 const LoggedInHeader = () => {
     const [navbarOpen, setNavbarOpen] = useState(false);
     const [firstName, setFirstName] = useState('');
+
+    const handleLogout = async () => {
+        const result = await logoutUser();
+    
+        if (result.success) {
+          // Perform any additional actions after successful logout
+          // For example, redirect to a login page
+          window.location.href = '/Login';
+        } else {
+          // Handle error
+          console.error('Logout error:', result.message);
+        }
+      };
+    
 
     useEffect(() => {
         const fetchCurrentUser = async () => {
@@ -25,8 +39,10 @@ const LoggedInHeader = () => {
     
         fetchCurrentUser();
       }, []);
+      
     
 
+      
   
     return (
       <div>
@@ -83,7 +99,8 @@ const LoggedInHeader = () => {
                 <li className="nav-item">
                   <a
                     className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
-                    href="/HomePage"
+                    href="/Login"
+                    onClick={handleLogout}
                   >
                     <i className="fab fa-twitter text-lg leading-lg text-white opacity-75"></i><span className="ml-2">Logout</span>
                   </a>

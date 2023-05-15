@@ -16,11 +16,10 @@ const LoggedInHeader = () => {
         const result = await logoutUser();
     
         if (result.success) {
-          // Perform any additional actions after successful logout
-          // For example, redirect to a login page
+         
           window.location.href = '/Login';
         } else {
-          // Handle error
+        
           console.error('Logout error:', result.message);
         }
       };

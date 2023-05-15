@@ -8,7 +8,7 @@ import { useState } from "react";
 import useUserMustBeLogged from "../hooks/userUserMustBeLogged";
 
 const Login = () => {
-  useUserMustBeLogged("out", "/User");
+  useUserMustBeLogged("out", "/UserList");
   const router = useRouter();
 
   function reducer(state, action) {
@@ -46,7 +46,7 @@ const Login = () => {
     dispatch({ type: "loading", value: false });
     if (!!response?.success) {
       setTimeout(() => {
-        router.replace("/User");
+        router.replace("/UserList");
       }, 2000);
     }
   };

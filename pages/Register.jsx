@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import useUserMustBeLogged from "../hooks/userUserMustBeLogged";
 
 const Register = () => {
-  useUserMustBeLogged("out", "/User");
+  useUserMustBeLogged("out", "/UserList");
   const router = useRouter();
   //   const [fname, setFname] = useState("");
   //   const [lname, setLname] = useState("");

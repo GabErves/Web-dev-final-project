@@ -1,5 +1,5 @@
 "use client";
-import Header from "@/components/Header";
+import LoggedInHeader from "@/components/LoggedInHeader";
 import React from "react";
 import Login from "./Login";
 import "../app/globals.css";
@@ -8,9 +8,11 @@ import { registerUser } from "../utils/data";
 import { useReducer } from "react";
 import { useRouter } from "next/navigation";
 
+
 const UserList = () => {
   return (
     <>
+    <LoggedInHeader/>
       <p>User Page</p>
     </>
   );

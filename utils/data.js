@@ -1,47 +1,45 @@
 import supabase from "./supabase";
 
-
 const getCurrentUser = async () => {
-     // grab the session from supabase (which handles all authentication)
-    const session = await supabase.auth.getSession();
-    // if a user property exists in the session.data.session object
-  
-    if (session?.data?.session?.user) {
+  // grab the session from supabase (which handles all authentication)
+  const session = await supabase.auth.getSession();
+  // if a user property exists in the session.data.session object
+
+  if (session?.data?.session?.user) {
     //grab from the meta table we created for the current logged
     // in user, and attach it to the user object under the key
     // barge meta, this is so we can access for the current user's
     // name and slug
-      const { data, error } = await supabase
-        .from("profile")
-        .select("*")
-        .eq("user_id", session.data.session.user.id)
-        .single();
+    const { data, error } = await supabase
+      .from("profile")
+      .select("*")
+      .eq("user_id", session.data.session.user.id)
+      .single();
     // here we take the user from the session.data.session
     // object and attach to it a property bargeMeta
     // that holds the name and slug (and some other info
     // that is not important)
-  
-      if (error) {
-        return {
-          data: null,
-          error: error.message,
-        };
-      }
-  
-      const user = {...session.data.session.user,ListoMeta: data,};
-  
+
+    if (error) {
       return {
-        data: user,
-        error: null,
+        data: null,
+        error: error.message,
       };
     }
-  
+
+    const user = { ...session.data.session.user, ListoMeta: data };
+
     return {
-      data: null,
+      data: user,
       error: null,
     };
+  }
+
+  return {
+    data: null,
+    error: null,
   };
-  
+};
 
 // register a user//
 /**
@@ -161,25 +159,44 @@ const loginUser = async (email, password) => {
     success: false,
     message: "An unknown error has occurred",
   };
-};
+}; //End of login user
 
 //Log out a user
 const logoutUser = async () => {
-    const { error } = await supabase.auth.signOut();
-  
-    if (error) {
-      console.error('Error logging out:', error.message);
-      return {
-        success: false,
-        message: error.message,
-      };
-    }
-  
-    return {
-      success: true,
-      message: 'Logged out successfully',
-    };
-  };
+  const { error } = await supabase.auth.signOut();
 
+  if (error) {
+    console.error("Error logging out:", error.message);
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+
+  return {
+    success: true,
+    message: "Logged out successfully",
+  };
+}; //End of logoutUser
+
+const getUserByUsername = async (usernam) => {
+  const { data, error } = await supabase
+    .from("profile")
+    .select("user_id")
+    .eq("name", username)
+    .limit(1)
+    .single();
+  if (error) {
+    return {
+      success: false,
+      error,
+    };
+  }
+
+  return {
+    success: true,
+    data,
+  };
+};
 
 export { getCurrentUser, loginUser, registerUser, logoutUser };

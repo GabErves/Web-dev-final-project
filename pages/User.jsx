@@ -8,14 +8,13 @@ import { registerUser } from "../utils/data";
 import { useReducer } from "react";
 import { useRouter } from "next/navigation";
 
-
-const UserList = () => {
+const User = () => {
   return (
     <>
-    <LoggedInHeader/>
-      <p>User Page</p>
+      <LoggedInHeader />
+      <h3 className="text-center text-2xl font-bold">Your Lists</h3>
     </>
   );
 };
 
-export default UserList;
+export default User;

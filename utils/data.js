@@ -179,7 +179,7 @@ const logoutUser = async () => {
   };
 }; //End of logoutUser
 
-const getUserByUsername = async (usernam) => {
+const getUserByUsername = async (username) => {
   const { data, error } = await supabase
     .from("profile")
     .select("user_id")
@@ -199,4 +199,7 @@ const getUserByUsername = async (usernam) => {
   };
 };
 
-export { getCurrentUser, loginUser, registerUser, logoutUser };
+const getList = async () =>{
+    
+}
+export { getCurrentUser, loginUser, registerUser, logoutUser, getUserByUsername, getList };

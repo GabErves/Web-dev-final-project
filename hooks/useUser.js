@@ -8,6 +8,12 @@ const useUser = () => {
   const [error, setError] = useState(0);
   const [fullyLoaded, setFullyLoaded] = useState(false);
 
+  const refreshUser = async () => {
+    setError(undefined);
+    setUser(undefined);
+    getUser();
+  };
+
   const getUser = async () => {
     // we want to clear out error, but do not necessarily
     // want to trigger a useEffect change for error here if we do not

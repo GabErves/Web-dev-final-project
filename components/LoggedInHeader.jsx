@@ -116,4 +116,8 @@ const LoggedInHeader = () => {
   );
 };
 
+<<<<<<< HEAD
 export default LoggedInHeader;
+=======
+export default LoggedInHeader;
+>>>>>>> 52c7f309632a286616fb30c7e0394cf87e168979

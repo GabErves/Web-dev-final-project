@@ -199,7 +199,32 @@ const getUserByUsername = async (username) => {
   };
 };
 
-const getList = async () =>{
-    
-}
-export { getCurrentUser, loginUser, registerUser, logoutUser, getUserByUsername, getList };
+// const addListItem = async (
+//     userId,
+//     listTitle,
+//     listItems,
+//     createdAt,
+//     username
+//   ) => {
+//     try {
+//       const insertData = listItems.map((item, index) => ({
+//         user_id: userId,
+//         list_title: listTitle,
+//         list_item: item,
+//         is_checked: false,
+//         order: index,
+//         created_at: createdAt,
+//         username: username,
+//       }));
+  
+//       const { data, error } = await supabase.from('lists').insert(insertData);
+//       if (error) {
+//         throw new Error(error.message);
+//       }
+//       return data; // return the inserted items
+//     } catch (error) {
+//       console.error(error.message);
+//       return null;
+//     }
+//   };
+export { getCurrentUser, loginUser, registerUser, logoutUser, getUserByUsername };

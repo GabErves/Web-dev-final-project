@@ -1,7 +1,7 @@
 import Header from "@/components/Header";
 import React from "react";
 import "../app/globals.css";
-import { loginUser } from "../utils/data";
+import { loginUser, getCurrentUser } from "../utils/data";
 import { useReducer } from "react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -44,9 +44,26 @@ const Login = () => {
 
     dispatch({ type: "response", value: response });
     dispatch({ type: "loading", value: false });
+
     if (!!response?.success) {
+      var localUsername = "";
+
+      const fetchCurrentUsername = async () => {
+        const { data, error } = await getCurrentUser();
+
+        if (data) {
+          localUsername = data.ListoMeta?.username || "";
+        } else {
+          console.log("Error fetching current user:", error);
+        }
+      };
+
+      fetchCurrentUsername();
+      console.log(localUsername);
+
+      //Jumps to user page
       setTimeout(() => {
-        router.replace("/User");
+        router.replace(`/Profile`);
       }, 2000);
     }
   };

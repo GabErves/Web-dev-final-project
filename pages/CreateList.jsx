@@ -2,16 +2,21 @@ import React, { useState, useEffect } from "react";
 import "../app/globals.css";
 import "./pages.css";
 import LoggedInHeader from "@/components/LoggedInHeader";
-import addNewList from "../utils/data";
+import { addNewList, getCurrentUser } from "../utils/data";
 import useUser from "../hooks/useUser";
 import useUserMustBeLogged from "../hooks/userUserMustBeLogged";
 
 const CreateList = () => {
   const [listItems, setListItems] = useState(["", ""]); //Why is this a state and not a bunch of respective items?
+  const [listTitle, setListTitle] = useState("");
+  const [localUsername, setLocalUsername] = useState("");
 
   const handleAddItem = () => {
     setListItems([...listItems, ""]);
+    console.log(listItems);
   };
+
+  const { user, refreshUser, error, loading } = useUser();
 
   const handleRemoveItem = (index) => {
     const updatedListItems = [...listItems];
@@ -35,19 +40,24 @@ const CreateList = () => {
   //   }
   // }, [user]);
 
+  //Adds new list items
   const addList = async (e) => {
     e.preventDefault();
 
+    for (let i = 0; i < listItems.length; i++) {
+      const addedList = await addNewList(
+        user.id, //user_id
+        listTitle, //list_title
+        listItems[i], //listitem
+        i, //Order
+        localUsername, //username
+        false //is_checked
+      );
+    }
+
     //const local_order
-    const addedLink = await addNewList(
-      user_id,
-      list_title,
-      list_item,
-      order,
-      username,
-      is_checked
-    );
-    if (addedLink.success == false) {
+
+    if (addedList.success == false) {
       //handle error
       return;
     }
@@ -58,6 +68,20 @@ const CreateList = () => {
     refreshUser();
     //handle success
   };
+
+  useEffect(() => {
+    const fetchCurrentUsername = async () => {
+      const { data, error } = await getCurrentUser();
+
+      if (data) {
+        setLocalUsername(data.ListoMeta?.username || "");
+      } else {
+        console.log("Error fetching current user:", error);
+      }
+    };
+
+    fetchCurrentUsername();
+  }, []);
 
   return (
     <div>
@@ -74,13 +98,18 @@ const CreateList = () => {
                 htmlFor="large-input"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
-                List Title
+                List Title*
               </label>
               <input
                 type="text"
                 id="large-input"
                 className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Type List Title"
+                value={listTitle}
+                onChange={(e) => {
+                  setListTitle(e.target.value);
+                  console.log(listTitle);
+                }}
                 required=""
               />
             </div>
@@ -89,7 +118,7 @@ const CreateList = () => {
                 <label
                   htmlFor="large-input"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >{`List Item ${index + 1}`}</label>
+                >{`List Item ${index + 1}*`}</label>
                 <div className="relative">
                   <input
                     type="text"

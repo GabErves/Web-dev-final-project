@@ -1,51 +1,45 @@
-import Link from 'next/link';
-import {useState, useEffect} from 'react';
-import { useRouter } from 'next/router';
+import Link from "next/link";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import Image from "next/image";
-import ListIcon from '../images/List-4.png'
-import '../app/globals.css';
-import './Header.css';
-import { getCurrentUser, logoutUser } from '../utils/data.js';
-
+import ListIcon from "../images/List-4.png";
+import "../app/globals.css";
+import "./Header.css";
+import { getCurrentUser, logoutUser } from "../utils/data.js";
 
 import React from "react";
 
 const LoggedInHeader = () => {
-    const [navbarOpen, setNavbarOpen] = useState(false);
-    const [firstName, setFirstName] = useState('');
-    
+  const [navbarOpen, setNavbarOpen] = useState(false);
+  const [firstName, setFirstName] = useState("");
 
-    const handleLogout = async () => {
-        const result = await logoutUser();
-      
-        if (result.success) {
-          router.push('/Login');
-        } else {
-          console.error('Logout error:', result.message);
-        }
-      };
+  const handleLogout = async () => {
+    const result = await logoutUser();
 
-    useEffect(() => {
-        const fetchCurrentUser = async () => {
-          const { data, error } = await getCurrentUser();
-    
-          if (data) {
-            setFirstName(data.ListoMeta?.first_name || '');
-          } else {
-            console.log('Error fetching current user:', error);
-          }
-        };
-    
-        fetchCurrentUser();
-      }, []);
-      
-    
+    if (result.success) {
+      router.push("/Login");
+    } else {
+      console.error("Logout error:", result.message);
+    }
+  };
 
-      
-  
-    return (
-      <div>
-        <>
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      const { data, error } = await getCurrentUser();
+
+      if (data) {
+        setFirstName(data.ListoMeta?.first_name || "");
+      } else {
+        console.log("Error fetching current user:", error);
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
+
+  return (
+    <div>
+      <>
         <nav className="relative flex flex-wrap items-center justify-between px-2 py-3 bg-stone-500 mb-3">
           <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
             <div className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
@@ -53,7 +47,12 @@ const LoggedInHeader = () => {
                 className="text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-white"
                 href="/HomePage"
               >
-                <Image src={ListIcon} alt={'LinkBarge'} height="120" width="120" />
+                <Image
+                  src={ListIcon}
+                  alt={"LinkBarge"}
+                  height="120"
+                  width="120"
+                />
               </a>
               <button
                 className="text-white cursor-pointer text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none"
@@ -76,7 +75,8 @@ const LoggedInHeader = () => {
                     className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
                     href="/HomePage"
                   >
-                    <i className="fab fa-facebook-square text-lg leading-lg text-white opacity-75"></i><span className="ml-2">Welcome, {firstName}</span>
+                    <i className="fab fa-facebook-square text-lg leading-lg text-white opacity-75"></i>
+                    <span className="ml-2">Welcome, {firstName}</span>
                   </a>
                 </li>
                 <li className="nav-item">
@@ -84,7 +84,8 @@ const LoggedInHeader = () => {
                     className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
                     href="/CreateList"
                   >
-                    <i className="fab fa-twitter text-lg leading-lg text-white opacity-75"></i><span className="ml-2">Create</span>
+                    <i className="fab fa-twitter text-lg leading-lg text-white opacity-75"></i>
+                    <span className="ml-2">Create</span>
                   </a>
                 </li>
                 <li className="nav-item">
@@ -92,7 +93,8 @@ const LoggedInHeader = () => {
                     className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
                     href="/User"
                   >
-                    <i className="fab fa-pinterest text-lg leading-lg text-white opacity-75"></i><span className="ml-2">My Lists</span>
+                    <i className="fab fa-pinterest text-lg leading-lg text-white opacity-75"></i>
+                    <span className="ml-2">My Lists</span>
                   </a>
                 </li>
                 <li className="nav-item">
@@ -101,7 +103,8 @@ const LoggedInHeader = () => {
                     href="/Login"
                     onClick={handleLogout}
                   >
-                    <i className="fab fa-twitter text-lg leading-lg text-white opacity-75"></i><span className="ml-2">Logout</span>
+                    <i className="fab fa-twitter text-lg leading-lg text-white opacity-75"></i>
+                    <span className="ml-2">Logout</span>
                   </a>
                 </li>
               </ul>
@@ -109,9 +112,8 @@ const LoggedInHeader = () => {
           </div>
         </nav>
       </>
-      </div>
-    );
-  };
-  
-  export default LoggedInHeader;
-  
+    </div>
+  );
+};
+
+export default LoggedInHeader;

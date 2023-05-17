@@ -199,7 +199,6 @@ const getUserByUsername = async (username) => {
   };
 };
 
-
 // const addListItem = async (
 //     userId,
 //     listTitle,
@@ -217,7 +216,7 @@ const getUserByUsername = async (username) => {
 //         created_at: createdAt,
 //         username: username,
 //       }));
-  
+
 //       const { data, error } = await supabase.from('lists').insert(insertData);
 //       if (error) {
 //         throw new Error(error.message);
@@ -228,7 +227,6 @@ const getUserByUsername = async (username) => {
 //       return null;
 //     }
 //   };
-
 
 const addNewList = async (
   user_id,
@@ -270,5 +268,3 @@ export {
   getUserByUsername,
   getList,
 };
-
-export { getCurrentUser, loginUser, registerUser, logoutUser, getUserByUsername };

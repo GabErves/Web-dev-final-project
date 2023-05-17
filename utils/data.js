@@ -199,7 +199,43 @@ const getUserByUsername = async (username) => {
   };
 };
 
-const getList = async () =>{
-    
-}
-export { getCurrentUser, loginUser, registerUser, logoutUser, getUserByUsername, getList };
+const addNewList = async (
+  user_id,
+  list_title,
+  list_item,
+  order,
+  username,
+  is_checked
+) => {
+  //linkRequestData.data = null;
+  const insertResponse = await supabase.from("lists").insert({
+    user_id,
+    list_title,
+    list_item,
+    order,
+    username,
+    is_checked,
+  });
+  if (insertResponse.error) {
+    return {
+      success: false,
+      error: insertResponse.error,
+    };
+  }
+  return {
+    success: true,
+    message: "successfully added",
+    data: insertResponse.data,
+  };
+};
+
+const getList = async () => {};
+export {
+  addNewList,
+  getCurrentUser,
+  loginUser,
+  registerUser,
+  logoutUser,
+  getUserByUsername,
+  getList,
+};

@@ -4,12 +4,15 @@ import "./pages.css";
 import LoggedInHeader from "@/components/LoggedInHeader";
 import { addNewList, getCurrentUser } from "../utils/data";
 import useUser from "../hooks/useUser";
+import { refreshUser } from "../hooks/useUser";
 import useUserMustBeLogged from "../hooks/userUserMustBeLogged";
+import { useRouter } from "next/router";
 
 const CreateList = () => {
   const [listItems, setListItems] = useState(["", ""]); //Why is this a state and not a bunch of respective items?
   const [listTitle, setListTitle] = useState("");
   const [localUsername, setLocalUsername] = useState("");
+  const router = useRouter();
 
   const handleAddItem = () => {
     setListItems([...listItems, ""]);
@@ -57,7 +60,7 @@ const CreateList = () => {
 
     //const local_order
 
-    if (addedList.success == false) {
+    if (addList.success == false) {
       //handle error
       return;
     }
@@ -65,7 +68,7 @@ const CreateList = () => {
     //setTitle("");
     //@todo update this to either fake get the links (by taking the latest DB load + adding in the latest pushed link)
     //  or make a new request....
-    refreshUser();
+    // refreshUser();
     //handle success
   };
 
@@ -82,6 +85,15 @@ const CreateList = () => {
 
     fetchCurrentUsername();
   }, []);
+
+  const handleClick = () => {
+    // Pass the listItems data as state when navigating to the User component
+    router.push({
+      pathname: "/user",
+      query: { listItems: JSON.stringify(listItems) }
+    });
+  };
+
 
   return (
     <div>
@@ -159,6 +171,7 @@ const CreateList = () => {
             <button
               type="submit"
               className="text-white bg-stone-700 hover:bg-stone-800 focus:ring-4 focus:outline-none focus:ring-stone-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-stone-600 dark:hover:bg-stone-700 dark:focus:ring-stone-800"
+              onClick={handleClick}
             >
               Create List
             </button>

@@ -1,14 +1,30 @@
 import Header from "@/components/Header";
 import React from "react";
 import "../app/globals.css";
-import { loginUser, getCurrentUser } from "../utils/data";
+import { loginUser, getCurrentUser, getCurrentID } from "../utils/data";
 import { useReducer } from "react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useUserMustBeLogged from "../hooks/userUserMustBeLogged";
 
 const Login = () => {
-  useUserMustBeLogged("out", "/User");
+  //The currently logged in user's user_id
+  const [localID, setLocalID] = useState("");
+
+  //Gets the user id to put into url link before anything else
+  const idFetcher = async () => {
+    const hold = await getCurrentID();
+    if (hold) {
+      setLocalID(hold);
+    }
+  };
+
+  useEffect(() => {
+    idFetcher();
+  }, []);
+
+  //useUserMustBeLogged("out", "/profile");
+  useUserMustBeLogged("out", `/user/${localID}`);
   const router = useRouter();
 
   function reducer(state, action) {
@@ -45,27 +61,16 @@ const Login = () => {
     dispatch({ type: "response", value: response });
     dispatch({ type: "loading", value: false });
 
+    const hold = await getCurrentID();
+    setLocalID(hold);
+
     if (!!response?.success) {
-      var localUsername = "";
-
-      const fetchCurrentUsername = async () => {
-        const { data, error } = await getCurrentUser();
-
-        if (data) {
-          localUsername = data.ListoMeta?.username || "";
-        } else {
-          console.log("Error fetching current user:", error);
-        }
-      };
-
-      fetchCurrentUsername();
-      console.log(localUsername);
-
-      //Jumps to user page
       setTimeout(() => {
-        router.replace(`/Profile`);
+        router.replace(`/user/${localID}`);
       }, 2000);
     }
+
+    //Jumps to user page
   };
 
   return (

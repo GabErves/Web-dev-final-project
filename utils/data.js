@@ -41,6 +41,28 @@ const getCurrentUser = async () => {
   };
 };
 
+//Fetches current id ; VITAL for url links
+const getCurrentID = async () => {
+  const session = await supabase.auth.getSession();
+  if (session?.data?.session?.user) {
+    //Grabs current session data and returns equivalent current user id
+    const { data, error } = await supabase
+      .from("profile")
+      .select("*")
+      .eq("user_id", session.data.session.user.id)
+      .single();
+
+    if (error) {
+      return {
+        data: null,
+        error: error.message,
+      };
+    }
+
+    return data.user_id;
+  }
+};
+
 // register a user//
 /**
  * Register a user
@@ -258,16 +280,28 @@ const addNewList = async (
   };
 };
 
-const getList = async () => {};
+const getLists = async (userId) => {
+  const { data, error } = await supabase
+    .from("lists")
+    .select("*")
+    .eq("user_id", userId);
+  if (error) {
+    return {
+      success: false,
+      error,
+    };
+  }
+
+  return { success: true, data };
+};
+
 export {
+  getLists,
   addNewList,
   getCurrentUser,
   loginUser,
   registerUser,
   logoutUser,
+  getCurrentID,
   getUserByUsername,
-  getList,
-
 };
-
-

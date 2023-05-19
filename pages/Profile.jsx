@@ -10,25 +10,29 @@ import { useRouter } from "next/navigation";
 import { getCurrentUser, logoutUser, getLists } from "../utils/data.js";
 
 //Is now specific by user_id.
-const Profile = async (user_id) => {
+const Profile = ({ user_id }) => {
   const [localUsername, setLocalUsername] = useState("");
   const [localLists, setLocalLists] = useState([]);
 
-  //const { data, error } = await getCurrentUser();
-  const { data: lists } = await getLists(user_id);
-  var allLists = new Set();
+  useEffect(() => {
+    const fetchLists = async () => {
+      console.log("fetching Lists...");
+      //const { data, error } = await getCurrentUser();
+      const { data: lists } = await getLists(user_id);
+      var allLists = new Set();
 
-  console.log(lists);
+      //Adds all unique list_title names to a set
+      lists.forEach((item) => {
+        allLists.add(item.list_title);
+      });
 
-  //Adds all unique list_title names to a set
-  // data.list_title.forEach((item) => {
-  //   allLists.add(item);
-  // });
+      setLocalLists(allLists);
+    };
+    fetchLists();
+  }, [user_id]);
 
-  setLocalLists(allLists);
-
-  // useEffect(() => {}, []);
-
+  //console.log(lists);
+  console.log(localLists);
   return (
     <>
       <LoggedInHeader />

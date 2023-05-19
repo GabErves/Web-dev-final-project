@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
 import "../app/globals.css";
 import "./pages.css";
-import LoggedInHeader from "@/components/LoggedInHeader";
+import LoggedInHeader from "../components/LoggedInHeader";
 import { addNewList, getCurrentUser } from "../utils/data";
 import useUser from "../hooks/useUser";
-import { refreshUser } from "../hooks/useUser";
 import useUserMustBeLogged from "../hooks/userUserMustBeLogged";
 import { useRouter } from "next/router";
 
 const CreateList = () => {
-  const [listItems, setListItems] = useState(["", ""]); //Why is this a state and not a bunch of respective items?
+  const [listItems, setListItems] = useState(["", ""]);
   const [listTitle, setListTitle] = useState("");
   const [localUsername, setLocalUsername] = useState("");
   const [submissionStatus, setSubmissionStatus] = useState(null);
@@ -18,10 +17,9 @@ const CreateList = () => {
 
   const handleAddItem = () => {
     setListItems([...listItems, ""]);
-    console.log(listItems);
   };
 
-  const { user, refreshUser, error, loading } = useUser();
+  const { user } = useUser();
 
   const handleRemoveItem = (index) => {
     const updatedListItems = [...listItems];
@@ -29,23 +27,6 @@ const CreateList = () => {
     setListItems(updatedListItems);
   };
 
-  // //Remember to add error and loading states
-  // const { user, refreshUser, error, loading } = useUser();
-  // // we removed the useUser in the userMustBeLogged component, and now are supplying the user
-  // useUserMustBeLogged(user, "in", "/login");
-
-  // useEffect(() => {
-  //   if (user) {
-  //     let tempCurrentLists = user.Lists;
-  //     if (linkType === "link") {
-  //       tempCurrentLinks = user.linkLinks;
-  //     }
-
-  //     setCurrentLinks(tempCurrentLinks);
-  //   }
-  // }, [user]);
-
-  //Adds new list items
   const addList = async (e) => {
     e.preventDefault();
 
@@ -60,23 +41,11 @@ const CreateList = () => {
       );
     }
 
-    //const local_order
-
-    if (addList.success == false) {
-      //handle error
-      return;
-    }
-
     router.push({
       pathname: "/user",
-      query: { listItems: JSON.stringify(listItems) }
+      query: { listItems: JSON.stringify(listItems) },
     });
-    //setUrl("");
-    //setTitle("");
-    //@todo update this to either fake get the links (by taking the latest DB load + adding in the latest pushed link)
-    //  or make a new request....
-    // refreshUser();
-    //handle success
+
     setSubmissionStatus("success");
     setSubmissionMessage("List submitted successfully!");
   };
@@ -96,23 +65,20 @@ const CreateList = () => {
   }, []);
 
   const handleClick = () => {
-    // Pass the listItems data as state when navigating to the User component
     router.push({
       pathname: "/user",
-      query: { listItems: JSON.stringify(listItems) }
+      query: { listItems: JSON.stringify(listItems) },
     });
   };
-
 
   return (
     <div>
       <LoggedInHeader />
-      {/* <form className="bg-white dark:bg-gray-900"> */}
       <div className="py-8 px-4 mx-auto max-w-2xl lg:py-16">
         <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">
           Create a New List
         </h2>
-        <form action="#" onSubmit={addList}>
+        <form onSubmit={addList} href="/User">
           <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
             <div className="sm:col-span-2">
               <label
@@ -127,10 +93,7 @@ const CreateList = () => {
                 className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Type List Title"
                 value={listTitle}
-                onChange={(e) => {
-                  setListTitle(e.target.value);
-                  console.log(listTitle);
-                }}
+                onChange={(e) => setListTitle(e.target.value)}
                 required=""
               />
             </div>
@@ -180,17 +143,16 @@ const CreateList = () => {
             <button
               type="submit"
               className="text-white bg-stone-700 hover:bg-stone-800 focus:ring-4 focus:outline-none focus:ring-stone-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-stone-600 dark:hover:bg-stone-700 dark:focus:ring-stone-800"
-              
+              href="/User"
             >
               Create List
             </button>
             {submissionStatus === "success" && (
-  <p className="text-green-500">{submissionMessage}</p>
-)}
+              <p className="text-green-500">{submissionMessage}</p>
+            )}
           </div>
         </form>
       </div>
-      {/* </form> */}
     </div>
   );
 };

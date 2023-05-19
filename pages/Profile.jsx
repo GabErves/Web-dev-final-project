@@ -1,5 +1,5 @@
 "use client";
-import LoggedInHeader from "@/components/LoggedInHeader";
+import LoggedInHeader from "../components/LoggedInHeader";
 import React from "react";
 import Login from "./Login";
 import "../app/globals.css";
@@ -16,17 +16,21 @@ const Profile = ({ user_id }) => {
 
   useEffect(() => {
     const fetchLists = async () => {
-      console.log("fetching Lists...");
-      //const { data, error } = await getCurrentUser();
-      const { data: lists } = await getLists(user_id);
-      var allLists = new Set();
-
-      //Adds all unique list_title names to a set
-      lists.forEach((item) => {
-        allLists.add(item.list_title);
-      });
-
-      setLocalLists(allLists);
+      try {
+        console.log("fetching Lists...");
+        const { data: lists } = await getLists(user_id);
+        var allLists = new Set();
+  
+        //Adds all unique list_title names to a set
+        lists.forEach((item) => {
+          allLists.add(item.list_title);
+        });
+  
+        setLocalLists(allLists);
+      } catch (error) {
+        // Handle the error
+        console.log("Error fetching lists:", error);
+      }
     };
     fetchLists();
   }, [user_id]);

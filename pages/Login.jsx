@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import React from "react";
+import Link from "next/link";
 import "../app/globals.css";
 import { loginUser, getCurrentUser, getCurrentID } from "../utils/data";
 import { useReducer } from "react";

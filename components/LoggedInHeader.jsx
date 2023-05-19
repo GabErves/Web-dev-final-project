@@ -5,14 +5,26 @@ import Image from "next/image";
 import ListIcon from "../images/List-4.png";
 import "../app/globals.css";
 import "./Header.css";
-import { getCurrentUser, logoutUser } from "../utils/data.js";
+import { getCurrentUser, logoutUser, getCurrentID } from "../utils/data.js";
 
 import React from "react";
 
 const LoggedInHeader = () => {
   const [navbarOpen, setNavbarOpen] = useState(false);
   const [firstName, setFirstName] = useState("");
+  const [localID, setLocalID] = useState("");
 
+  //Gets the user id to put into url link before anything else
+  const idFetcher = async () => {
+    const hold = await getCurrentID();
+    if (hold) {
+      setLocalID(hold);
+    }
+  };
+
+  useEffect(() => {
+    idFetcher();
+  }, []);
   const handleLogout = async () => {
     const result = await logoutUser();
 
@@ -73,7 +85,7 @@ const LoggedInHeader = () => {
                 <li className="nav-item">
                   <a
                     className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
-                    href="/User"
+                    href={`/user/${localID}`}
                   >
                     <i className="fab fa-facebook-square text-lg leading-lg text-white opacity-75"></i>
                     <span className="ml-2">Welcome, {firstName}</span>
@@ -91,7 +103,7 @@ const LoggedInHeader = () => {
                 <li className="nav-item">
                   <a
                     className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
-                    href="/User"
+                    href={`/user/${localID}`}
                   >
                     <i className="fab fa-pinterest text-lg leading-lg text-white opacity-75"></i>
                     <span className="ml-2">My Lists</span>

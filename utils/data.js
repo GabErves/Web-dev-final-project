@@ -256,7 +256,8 @@ const addNewList = async (
   list_item,
   order,
   username,
-  is_checked
+  is_checked,
+  list_id
 ) => {
   //linkRequestData.data = null;
   const insertResponse = await supabase.from("lists").insert({
@@ -266,6 +267,7 @@ const addNewList = async (
     order,
     username,
     is_checked,
+    list_id,
   });
   if (insertResponse.error) {
     return {
@@ -295,8 +297,40 @@ const getLists = async (userId) => {
   return { success: true, data };
 };
 
+//Retrieves list items from a spcific listId
+const getListItems = async (listId) => {
+  const { data, error } = await supabase
+    .from("lists")
+    .select("*")
+    .eq("list_id", listId);
+  if (error) {
+    return {
+      success: false,
+      error,
+    };
+  }
+
+  return { success: true, data };
+};
+
+//Checks if a list_id matches a specific user_id. Returns a boolean
+const ifOwnList = async (listId, userId) => {
+  const { data, error } = await supabase
+    .from("lists")
+    .select("*")
+    .eq("list_id", listId);
+
+  if (data.user_id === userId) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
 export {
   getLists,
+  ifOwnList,
+  getListItems,
   addNewList,
   getCurrentUser,
   loginUser,

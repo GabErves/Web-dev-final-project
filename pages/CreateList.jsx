@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import "../app/globals.css";
 import "./pages.css";
 import LoggedInHeader from "../components/LoggedInHeader";
-import { addNewList, getCurrentUser } from "../utils/data";
+import { addNewList, getCurrentUser, getCurrentID } from "../utils/data";
 import useUser from "../hooks/useUser";
 import useUserMustBeLogged from "../hooks/userUserMustBeLogged";
 import { useRouter } from "next/router";
+import { v4 as uuidv4 } from "uuid"; //Used for generating uuids
 
 const CreateList = () => {
   const [listItems, setListItems] = useState(["", ""]);
@@ -27,9 +28,23 @@ const CreateList = () => {
     setListItems(updatedListItems);
   };
 
+  const [localID, setLocalID] = useState("");
+
+  //Gets the user id to put into url link before anything else
+  const idFetcher = async () => {
+    const hold = await getCurrentID();
+    if (hold) {
+      setLocalID(hold);
+    }
+  };
+
+  useEffect(() => {
+    idFetcher();
+  }, []);
+
   const addList = async (e) => {
     e.preventDefault();
-
+    const listId = uuidv4();
     for (let i = 0; i < listItems.length; i++) {
       const addedList = await addNewList(
         user.id, //user_id
@@ -37,12 +52,13 @@ const CreateList = () => {
         listItems[i], //listitem
         i, //Order
         localUsername, //username
-        false //is_checked
+        false, //is_checked
+        listId //list_id
       );
     }
 
     router.push({
-      pathname: "/user",
+      pathname: `/user/${localID}`,
       query: { listItems: JSON.stringify(listItems) },
     });
 

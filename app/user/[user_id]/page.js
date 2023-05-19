@@ -1,7 +1,8 @@
 import Profile from "../../../pages/Profile";
 
-const Page = ({ params: { user_id } }) => {
-  //const hold = user_id;
+//The page that appears at user/[user_id]:
+const Page = ({ params }) => {
+  const { user_id } = params;
   return <Profile user_id={user_id} />;
 };
 

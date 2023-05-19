@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import "../app/globals.css";
 import "./pages.css";
 import LoggedInHeader from "@/components/LoggedInHeader";
-const EditList = () => {
+const EditList = ({ list_id }) => {
   const [listItems, setListItems] = useState(["", ""]);
 
-  const handleAddItem = () => {
+  const handleAddItem = ({ list_id }) => {
     setListItems([...listItems, ""]);
   };
 
@@ -19,6 +19,7 @@ const EditList = () => {
     <>
       <div>
         <LoggedInHeader />
+        <h3 className="text-center text-5xl font-bold p-10">List Editer</h3>
         <div>
           <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <a href="#">

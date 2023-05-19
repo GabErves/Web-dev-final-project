@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 const User = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [listItems, setListItems] = useState(["", ""]);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -20,6 +21,12 @@ const User = () => {
     };
 
     fetchUserData();
+
+    const queryListItems = router.query.listItems;
+    if (queryListItems) {
+      const decodedListItems = JSON.parse(decodeURIComponent(queryListItems));
+      setListItems(decodedListItems);
+    }
   }, []);
 
   return (

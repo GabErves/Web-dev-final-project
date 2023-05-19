@@ -12,6 +12,8 @@ const CreateList = () => {
   const [listItems, setListItems] = useState(["", ""]); //Why is this a state and not a bunch of respective items?
   const [listTitle, setListTitle] = useState("");
   const [localUsername, setLocalUsername] = useState("");
+  const [submissionStatus, setSubmissionStatus] = useState(null);
+  const [submissionMessage, setSubmissionMessage] = useState("");
   const router = useRouter();
 
   const handleAddItem = () => {
@@ -64,12 +66,19 @@ const CreateList = () => {
       //handle error
       return;
     }
+
+    router.push({
+      pathname: "/user",
+      query: { listItems: JSON.stringify(listItems) }
+    });
     //setUrl("");
     //setTitle("");
     //@todo update this to either fake get the links (by taking the latest DB load + adding in the latest pushed link)
     //  or make a new request....
     // refreshUser();
     //handle success
+    setSubmissionStatus("success");
+    setSubmissionMessage("List submitted successfully!");
   };
 
   useEffect(() => {
@@ -171,10 +180,13 @@ const CreateList = () => {
             <button
               type="submit"
               className="text-white bg-stone-700 hover:bg-stone-800 focus:ring-4 focus:outline-none focus:ring-stone-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-stone-600 dark:hover:bg-stone-700 dark:focus:ring-stone-800"
-              onClick={handleClick}
+              
             >
               Create List
             </button>
+            {submissionStatus === "success" && (
+  <p className="text-green-500">{submissionMessage}</p>
+)}
           </div>
         </form>
       </div>

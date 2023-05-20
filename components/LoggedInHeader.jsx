@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import ListIcon from "../images/List-4.png";
 import "../app/globals.css";
@@ -10,6 +10,7 @@ import { getCurrentUser, logoutUser, getCurrentID } from "../utils/data.js";
 import React from "react";
 
 const LoggedInHeader = () => {
+  const router = useRouter();
   const [navbarOpen, setNavbarOpen] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [localID, setLocalID] = useState("");

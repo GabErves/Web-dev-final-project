@@ -3,18 +3,42 @@ import React, { useState, useEffect } from "react";
 import "../app/globals.css";
 import "./pages.css";
 import LoggedInHeader from "@/components/LoggedInHeader";
-import { getListItems } from "../utils/data.js";
+import { getListItems, getCurrentID, ifOwnList } from "../utils/data.js";
 import { Container } from "react-bootstrap";
+import { useRouter } from "next/navigation";
+
 const ViewList = ({ list_id }) => {
   const [listItems, setListItems] = useState({});
   const [listTitle, setListTitle] = useState("");
   const [listAuthor, setListAuthor] = useState("");
-
+  const [localID, setLocalID] = useState("");
+  const router = useRouter();
+  //Function Definitions
   const checkSwitch = (is_checked) => {
     if (is_checked === true) {
       return "line-through ch w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300";
     }
   };
+
+  //Extra re-route check (CURRENTLY BROKEN)
+
+  useEffect(() => {
+    const idFetcher = async () => {
+      const hold = await getCurrentID();
+      if (hold) {
+        setLocalID(hold);
+      }
+    };
+
+    const checkListOwner = (key) => {
+      if (ifOwnList(key, localID)) {
+        //console.log(localID);
+        router.push(`/user/${localID}/list/${key}/edit`);
+      }
+    };
+    idFetcher();
+    checkListOwner(list_id);
+  }, [list_id]);
 
   useEffect(() => {
     const fetchLists = async () => {

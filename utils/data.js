@@ -297,7 +297,6 @@ const getLists = async (userId) => {
   return { success: true, data };
 };
 
-//Retrieves list items from a spcific listId
 const getListItems = async (listId) => {
   const { data, error } = await supabase
     .from("lists")
@@ -312,6 +311,7 @@ const getListItems = async (listId) => {
 
   return { success: true, data };
 };
+
 
 //Checks if a list_id matches a specific user_id. Returns a boolean
 const ifOwnList = async (listId, userId) => {

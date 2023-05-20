@@ -7,13 +7,14 @@ import { useRouter } from "next/navigation";
 
 const Page = ({ params }) => {
   const router = useRouter();
+  const { user_id } = params;
   const { list_id } = params;
 
   //Gets the user id to put into url link before anything else
 
   return (
     <>
-      <ViewList list_id={list_id}></ViewList>
+      <ViewList list_id={list_id} user_id={user_id}></ViewList>
     </>
   );
 };

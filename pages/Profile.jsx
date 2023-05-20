@@ -47,7 +47,7 @@ const Profile = ({ user_id }) => {
   const checkListOwner = (key) => {
     if (ifOwnList(key, user_id)) {
       //return router.push(`/user/${localID}/list/${key}/edit`);
-      return `/user/${user_id}/list/${key}`;
+      return `/user/${user_id}/list/${key}/edit`;
     } else {
       return `/user/${user_id}/list/${key}`;
     }

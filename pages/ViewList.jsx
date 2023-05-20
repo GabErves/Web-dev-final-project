@@ -7,7 +7,7 @@ import { getListItems, getCurrentID, ifOwnList } from "../utils/data.js";
 import { Container } from "react-bootstrap";
 import { useRouter } from "next/navigation";
 
-const ViewList = ({ list_id }) => {
+const ViewList = ({ list_id, user_id }) => {
   const [listItems, setListItems] = useState({});
   const [listTitle, setListTitle] = useState("");
   const [listAuthor, setListAuthor] = useState("");
@@ -22,23 +22,23 @@ const ViewList = ({ list_id }) => {
 
   //Extra re-route check (CURRENTLY BROKEN)
 
-  useEffect(() => {
-    const idFetcher = async () => {
-      const hold = await getCurrentID();
-      if (hold) {
-        setLocalID(hold);
-      }
-    };
+  // useEffect(() => {
+  //   const idFetcher = async () => {
+  //     const hold = await getCurrentID();
+  //     if (hold) {
+  //       setLocalID(hold);
+  //     }
+  //   };
 
-    const checkListOwner = (key) => {
-      if (ifOwnList(key, localID)) {
-        //console.log(localID);
-        router.push(`/user/${localID}/list/${key}/edit`);
-      }
-    };
-    idFetcher();
-    checkListOwner(list_id);
-  }, [list_id]);
+  //   const checkListOwner = (key) => {
+  //     if (ifOwnList(key, user_id)) {
+  //       //console.log(localID);
+  //       router.push(`/user/${user_id}/list/${key}/edit`);
+  //     }
+  //   };
+  //   idFetcher();
+  //   checkListOwner(list_id);
+  // }, [list_id]);
 
   useEffect(() => {
     const fetchLists = async () => {

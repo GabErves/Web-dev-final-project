@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import "../app/globals.css";
 import "./pages.css";
 import LoggedInHeader from "@/components/LoggedInHeader";
-const EditList = ({ list_id }) => {
+const EditList = (props) => {
   const [listItems, setListItems] = useState(["", ""]);
-
+  const list_id = props.list_id;
   const handleAddItem = ({ list_id }) => {
     setListItems([...listItems, ""]);
   };
@@ -14,6 +14,8 @@ const EditList = ({ list_id }) => {
     updatedListItems.splice(index, 1);
     setListItems(updatedListItems);
   };
+
+  // return <div>{JSON.stringify(props)}</div>;
 
   return (
     <>

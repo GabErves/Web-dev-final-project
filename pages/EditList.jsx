@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../app/globals.css";
 import "./pages.css";
 import LoggedInHeader from "@/components/LoggedInHeader";
+import { getListItems, getCurrentID, ifOwnList, updateList} from "../utils/data";
+
 const EditList = (props) => {
+
   const [listItems, setListItems] = useState(["", ""]);
   const list_id = props.list_id;
   const handleAddItem = ({ list_id }) => {
@@ -14,6 +17,51 @@ const EditList = (props) => {
     updatedListItems.splice(index, 1);
     setListItems(updatedListItems);
   };
+
+  const editedList = async (e) => {
+    e.preventDefault();
+    e.preventDefault();
+    
+    const listId = uuidv4(); // Make sure you have the uuidv4 library imported
+    const localUsername = "Username"; 
+    const listTitle = e.target.elements["large-input"].value;
+
+
+  
+    for (let i = 0; i < listItems.length; i++) {
+      const listItem = await updateList(
+        user.id, //user_id
+        listTitle, //list_title
+        listItems[i], //listitem
+        i, //Order
+        localUsername, //username
+        false, //is_checked
+        listId //list_id
+      );
+    }
+
+    router.push(`/user/${localID}`, {
+      query: { listItems: JSON.stringify(listItems) },
+    });
+
+
+    setSubmissionStatus("success");
+    setSubmissionMessage("List submitted successfully!");
+  };
+
+  useEffect(() => {
+    const fetchCurrentUsername = async () => {
+      const { data, error } = await getCurrentUser();
+
+      if (data) {
+        setLocalUsername(data.ListoMeta?.username || "");
+      } else {
+        console.log("Error fetching current user:", error);
+      }
+    };
+
+    fetchCurrentUsername();
+  }, []);
 
   // return <div>{JSON.stringify(props)}</div>;
 
@@ -27,7 +75,9 @@ const EditList = (props) => {
             <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">
               Edit List
             </h2>
-            <form action="#">
+
+            
+            <form action="#" onSubmit={editedList}>
               <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
                 <div className="sm:col-span-2">
                   <label
@@ -95,8 +145,10 @@ const EditList = (props) => {
                 </button>
               </div>
             </form>
+   
           </div>
         </form>
+         
       </div>
     </>
   );

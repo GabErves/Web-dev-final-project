@@ -327,6 +327,51 @@ const ifOwnList = async (listId, userId) => {
   }
 };
 
+// const listId = 'list_id'; // Provide the actual listId
+// const updatedFields = {
+//   list_title: 'New List Title',
+//   list_item: 'Updated List Item',
+//   order: 1,
+//   username: 'Updated Username',
+//   is_checked: false,
+// };
+
+// updateList(listId, updatedFields);
+
+const updateList = async (
+  userId,
+  listTitle,
+  listItem,
+  order,
+  username,
+  isChecked,
+  listId
+) => {
+  try {
+    const { data, error } = await supabase
+      .from("lists")
+      .update({
+        list_title: listTitle,
+        list_item: listItem,
+        order: order,
+        username: username,
+        is_checked: isChecked,
+      })
+      .eq("list_id", listId);
+
+    if (error) {
+      // Handle error
+      console.error(error);
+    } else {
+      // Update successful
+      console.log("List updated successfully:", data);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
+
+
 export {
   getLists,
   ifOwnList,
@@ -338,4 +383,5 @@ export {
   logoutUser,
   getCurrentID,
   getUserByUsername,
+  updateList
 };

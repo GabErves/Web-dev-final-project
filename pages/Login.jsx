@@ -25,7 +25,7 @@ const Login = () => {
   }, []);
 
   //useUserMustBeLogged("out", "/profile");
-  useUserMustBeLogged("out", `/user/${localID}`);
+  //useUserMustBeLogged("out", `/user/${localID}`);
   const router = useRouter();
 
   function reducer(state, action) {

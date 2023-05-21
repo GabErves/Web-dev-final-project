@@ -15,7 +15,8 @@ import {
 } from "../utils/data";
 
 const EditList = ({ list_id }) => {
-  const [listItems, setListItems] = useState(["", ""]);
+  const [listItems, setListItems] = useState([]);
+  const [listTitle, setListTitle] = useState("");
   const [localUsername, setLocalUsername] = useState("Username");
   const [submissionStatus, setSubmissionStatus] = useState(null);
   const [submissionMessage, setSubmissionMessage] = useState("");
@@ -23,8 +24,9 @@ const EditList = ({ list_id }) => {
   const router = useRouter();
 
   const { user } = useUser();
-  const handleAddItem = ({ list_id }) => {
-    setListItems([...listItems, ""]);
+
+  const handleAddItem = () => {
+    setListItems([...listItems, { content: "", isChecked: false }]);
   };
 
   const handleRemoveItem = (index) => {
@@ -35,45 +37,34 @@ const EditList = ({ list_id }) => {
 
   const editedList = async (e) => {
     e.preventDefault();
-    e.preventDefault();
 
     const { data: items } = await getListItems(list_id);
 
-    //Length of old list
-    var oldLength = items.length;
+    // Length of old list
+    const oldLength = items.length;
 
     const listTitle = e.target.elements["large-input"].value;
-    console.log(user.id);
-    console.log(oldLength);
 
     for (let i = 0; i < listItems.length; i++) {
-      // //Edits items in existing order
-
-      //Some edge cases may occur when
-
       if (i < oldLength) {
-        //-1 due to indexes starting at 0
         const listItem = await updateList(
-          user.id, //user_id
-          listTitle, //list_title
-          listItems[i], //listitem
-          i, //Order
-          localUsername, //username
-          false, //is_checked
-          list_id //list_id
+          user.id, // user_id
+          listTitle, // list_title
+          listItems[i].content, // list item content
+          i, // order
+          localUsername, // username
+          listItems[i].isChecked, // is_checked
+          list_id // list_id
         );
-      }
-
-      //Adds new items at the same list_id (if desired)
-      else {
+      } else {
         const newlistItem = await addNewList(
-          user.id, //user_id
-          listTitle, //list_title
-          listItems[i], //listitem
-          i, //Order
-          localUsername, //username
-          false, //is_checked
-          list_id //list_id
+          user.id, // user_id
+          listTitle, // list_title
+          listItems[i].content, // list item content
+          i, // order
+          localUsername, // username
+          listItems[i].isChecked, // is_checked
+          list_id // list_id
         );
       }
     }
@@ -81,13 +72,11 @@ const EditList = ({ list_id }) => {
     if (listItems.length < oldLength) {
       for (let i = listItems.length; i < oldLength; i++) {
         const deletedItems = await deleteItems(
-          list_id, //list_id
-          i //order
+          list_id, // list_id
+          i // order
         );
       }
     }
-
-    //
 
     router.push(`/user/${user.id}`, {
       query: { listItems: JSON.stringify(listItems) },
@@ -95,7 +84,27 @@ const EditList = ({ list_id }) => {
 
     setSubmissionStatus("success");
     setSubmissionMessage("List submitted successfully!");
-  }; //End of editedList
+  };
+
+  useEffect(() => {
+    const fetchListDetails = async () => {
+      try {
+        const { data: items } = await getListItems(list_id);
+        const list = items.map((item) => ({
+          content: item.list_item,
+          isChecked: item.is_checked,
+        }));
+        const title = items[0].list_title;
+
+        setListItems(list);
+        setListTitle(title);
+      } catch (error) {
+        console.log("Error fetching list details:", error);
+      }
+    };
+
+    fetchListDetails();
+  }, [list_id]);
 
   useEffect(() => {
     const fetchCurrentUsername = async () => {
@@ -111,12 +120,33 @@ const EditList = ({ list_id }) => {
     fetchCurrentUsername();
   }, []);
 
-  // return <div>{JSON.stringify(props)}</div>;
+  const handleCheckboxChange = (index) => {
+    const updatedListItems = [...listItems];
+    updatedListItems[index].isChecked = !updatedListItems[index].isChecked;
+    setListItems(updatedListItems);
+  };
 
-  //Please find a way to initialize the form with the original list values and their is_checked
-  //If we want to delete an item, we can click a button next to a form entry.
-  //Every list item we want deleted will be popped from listItems, before database calls are made
-  //We will NOT use the literal deleteItems function due to issues with ordering.
+  const handleMoveItemUp = (index) => {
+    if (index === 0) return;
+
+    const updatedListItems = [...listItems];
+    const currentItem = updatedListItems[index];
+    updatedListItems[index] = updatedListItems[index - 1];
+    updatedListItems[index - 1] = currentItem;
+
+    setListItems(updatedListItems);
+  };
+
+  const handleMoveItemDown = (index) => {
+    if (index === listItems.length - 1) return;
+
+    const updatedListItems = [...listItems];
+    const currentItem = updatedListItems[index];
+    updatedListItems[index] = updatedListItems[index + 1];
+    updatedListItems[index + 1] = currentItem;
+
+    setListItems(updatedListItems);
+  };
 
   return (
     <>
@@ -124,7 +154,6 @@ const EditList = ({ list_id }) => {
         <LoggedInHeader />
         <h3 className="text-center text-5xl font-bold p-10">List Editor</h3>
 
-        {/* <form className="bg-white dark:bg-gray-900"> */}
         <div className="py-8 px-4 mx-auto max-w-2xl lg:py-16">
           <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">
             Edit List
@@ -144,31 +173,44 @@ const EditList = ({ list_id }) => {
                   id="large-input"
                   className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Type List Title"
+                  value={listTitle}
+                  onChange={(e) => setListTitle(e.target.value)}
                   required=""
                 />
               </div>
 
               {listItems.map((item, index) => (
                 <div key={index} className="sm:col-span-2">
-                  <label
-                    htmlFor="large-input"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >{`List Item ${index + 1}`}</label>
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id={`checkbox-${index}`}
+                      name={`checkbox-${index}`}
+                      checked={item.isChecked}
+                      onChange={() => handleCheckboxChange(index)}
+                      className="mr-2"
+                    />
+                    <label
+                      htmlFor={`list-item-${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >{`List Item ${index + 1}`}</label>
+                  </div>
                   <div className="relative">
                     <input
                       type="text"
-                      name="name"
+                      id={`list-item-${index}`}
+                      name={`list-item-${index}`}
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       placeholder="Enter List Content"
-                      value={item}
+                      value={item.content}
                       onChange={(e) => {
                         const updatedListItems = [...listItems];
-                        updatedListItems[index] = e.target.value;
+                        updatedListItems[index].content = e.target.value;
                         setListItems(updatedListItems);
                       }}
                       required=""
                     />
-                    {index >= 2 && (
+                    {index >= 1 && (
                       <button
                         type="button"
                         className="absolute top-1/2 right-2 transform -translate-y-1/2 text-red-600 hover:text-red-800 focus:text-red-800 focus:outline-none"
@@ -178,6 +220,30 @@ const EditList = ({ list_id }) => {
                       </button>
                     )}
                   </div>
+                  {index > 0 && (
+                    <div className="mt-2">
+                      <button
+                        type="button"
+                        className="text-blue-600 hover:text-blue-800 focus:text-blue-800 focus:outline-none mr-2"
+                        onClick={() => handleMoveItemUp(index)}
+                      >
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18" />
+</svg>
+
+                      </button>
+                      <button
+                        type="button"
+                        className="text-blue-600 hover:text-blue-800 focus:text-blue-800 focus:outline-none"
+                        onClick={() => handleMoveItemDown(index)}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
+</svg>
+
+                      </button>
+                    </div>
+                  )}
                 </div>
               ))}
 
@@ -202,8 +268,6 @@ const EditList = ({ list_id }) => {
             </div>
           </form>
         </div>
-
-        {/* </form> */}
       </div>
     </>
   );

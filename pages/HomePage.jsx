@@ -34,7 +34,7 @@ const HomePage = () => {
     <div>
       <Header />
       {/* Render other content */}
-      <h3 className="text-center text-5xl font-bold p-10">Current Lists</h3>
+      <h3 className="text-center text-5xl font-bold p-10">Homepage</h3>
       <div className="grid flex justify-center">
         {lists.map((list) => (
           <div

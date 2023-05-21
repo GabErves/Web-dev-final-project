@@ -371,6 +371,26 @@ const updateList = async (
   }
 };
 
+const deleteItems = async (listId, listOrder) => {
+  try {
+    const { data, error } = await supabase
+      .from("lists")
+      .delete()
+      .eq("list_id", listId)
+      .eq("list_order", listOrder);
+
+    if (error) {
+      // Handle error
+      console.error(error);
+    } else {
+      // Update successful
+      console.log("List updated successfully:", data);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
+
 export {
   getLists,
   ifOwnList,
@@ -383,4 +403,5 @@ export {
   getCurrentID,
   getUserByUsername,
   updateList,
+  deleteItems,
 };

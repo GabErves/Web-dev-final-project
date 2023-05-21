@@ -11,6 +11,7 @@ import {
   updateList,
   getCurrentUser,
   addNewList,
+  deleteItems,
 } from "../utils/data";
 
 const EditList = ({ list_id }) => {
@@ -77,13 +78,24 @@ const EditList = ({ list_id }) => {
       }
     }
 
+    if (listItems.length < oldLength) {
+      for (let i = listItems.length; i < oldLength; i++) {
+        const deletedItems = await deleteItems(
+          list_id, //list_id
+          i //order
+        );
+      }
+    }
+
+    //
+
     router.push(`/user/${user.id}`, {
       query: { listItems: JSON.stringify(listItems) },
     });
 
     setSubmissionStatus("success");
     setSubmissionMessage("List submitted successfully!");
-  };
+  }; //End of editedList
 
   useEffect(() => {
     const fetchCurrentUsername = async () => {
@@ -100,6 +112,11 @@ const EditList = ({ list_id }) => {
   }, []);
 
   // return <div>{JSON.stringify(props)}</div>;
+
+  //Please find a way to initialize the form with the original list values and their is_checked
+  //If we want to delete an item, we can click a button next to a form entry.
+  //Every list item we want deleted will be popped from listItems, before database calls are made
+  //We will NOT use the literal deleteItems function due to issues with ordering.
 
   return (
     <>

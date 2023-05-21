@@ -254,7 +254,7 @@ const addNewList = async (
   user_id,
   list_title,
   list_item,
-  order,
+  list_order,
   username,
   is_checked,
   list_id
@@ -264,7 +264,7 @@ const addNewList = async (
     user_id,
     list_title,
     list_item,
-    order,
+    list_order,
     username,
     is_checked,
     list_id,
@@ -312,7 +312,6 @@ const getListItems = async (listId) => {
   return { success: true, data };
 };
 
-
 //Checks if a list_id matches a specific user_id. Returns a boolean
 const ifOwnList = async (listId, userId) => {
   const { data, error } = await supabase
@@ -342,7 +341,7 @@ const updateList = async (
   userId,
   listTitle,
   listItem,
-  order,
+  listOrder,
   username,
   isChecked,
   listId
@@ -353,11 +352,12 @@ const updateList = async (
       .update({
         list_title: listTitle,
         list_item: listItem,
-        order: order,
+        //list_order: listOrder,
         username: username,
         is_checked: isChecked,
       })
-      .eq("list_id", listId);
+      .eq("list_id", listId)
+      .eq("list_order", listOrder);
 
     if (error) {
       // Handle error
@@ -371,7 +371,6 @@ const updateList = async (
   }
 };
 
-
 export {
   getLists,
   ifOwnList,
@@ -383,5 +382,5 @@ export {
   logoutUser,
   getCurrentID,
   getUserByUsername,
-  updateList
+  updateList,
 };

@@ -46,6 +46,8 @@ const EditList = ({ list_id }) => {
     console.log(user.id);
     console.log(oldLength);
 
+    // [ [title, is_checked], [title, is_checked], [] ]
+
     for (let i = 0; i < listItems.length; i++) {
       // //Edits items in existing order
 

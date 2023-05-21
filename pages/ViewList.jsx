@@ -7,14 +7,16 @@ import { getListItems, getCurrentID, ifOwnList } from "../utils/data";
 import { Container } from "react-bootstrap";
 import { useRouter } from "next/navigation";
 
+// ...
+
 const ViewList = ({ list_id, user_id }) => {
-  const [listItems, setListItems] = useState({});
+  const [listItems, setListItems] = useState([]);
   const [listTitle, setListTitle] = useState("");
   const [listAuthor, setListAuthor] = useState("");
   const [localID, setLocalID] = useState("");
   
   const router = useRouter();
-  //Function Definitions
+  
   const checkSwitch = (is_checked) => {
     if (is_checked === true) {
       return "line-through ch w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300";
@@ -23,58 +25,28 @@ const ViewList = ({ list_id, user_id }) => {
     }
   };
   
-  //Extra re-route check (CURRENTLY BROKEN)
-
-  // useEffect(() => {
-  //   const idFetcher = async () => {
-  //     const hold = await getCurrentID();
-  //     if (hold) {
-  //       setLocalID(hold);
-  //     }
-  //   };
-
-  //   const checkListOwner = (key) => {
-  //     if (ifOwnList(key, user_id)) {
-  //       //console.log(localID);
-  //       router.push(`/user/${user_id}/list/${key}/edit`);
-  //     }
-  //   };
-  //   idFetcher();
-  //   checkListOwner(list_id);
-  // }, [list_id]);
-
   useEffect(() => {
     const fetchLists = async () => {
       try {
         const { data: items } = await getListItems(list_id);
-        var allItems = {};
+        var allItems = [];
         var title = new Set();
         var author = new Set();
 
-        //Adds list items in a 2D dictionary
-        //Format: listItems[order][list_item or check]
         items.forEach((item) => {
-          //Add title and author
           title.add(item.list_title);
           author.add(item.username);
 
-          if (!allItems[item.order]) {
-            allItems[item.order] = {
-              item: item.list_item,
-              check: item.is_checked,
-            };
-          } else {
-            allItems[item.order].item = item.list_item;
-            allItems[item.order].check = item.is_checked;
-          }
+          allItems.push({
+            item: item.list_item,
+            check: item.is_checked,
+          });
         });
 
-        //Set respective variables
         setListTitle(title);
         setListAuthor(author);
         setListItems(allItems);
       } catch (error) {
-        // Handle the error
         console.log("Error fetching lists:", error);
       }
     };
@@ -95,46 +67,39 @@ const ViewList = ({ list_id, user_id }) => {
               By: {listAuthor}
             </h3>
 
-            {Object.entries(listItems).map(([order, listItem]) => (
-              <li className="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600 list-none">
+            {listItems.map((listItem, index) => (
+              <li
+                key={index}
+                className="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600 list-none"
+              >
                 <div className="flex items-center pl-3">
-                  {/* <input
-                  id="vue-checkbox"
-                  type="checkbox"
-                  value=""
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                />
-                <label
-                  key={order}
-                  for="vue-checkbox"
-                  className="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                >
-                  {listItem.item}
-                </label> */}
-                <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"></input>
-                  <p
+                  <input
+                    id={`list-item-${index}`}
+                    type="checkbox"
+                    value=""
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                  <label
+                    htmlFor={`list-item-${index}`}
                     className={`${checkSwitch(
-                      listItem.is_checked
-                    )} ch w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300`}
+                      listItem.check
+                    )} w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300`}
                   >
                     {listItem.item}
-                  </p>
+                  </label>
                   <button
-            type="button"
-            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-            onClick={() =>
-              router.push(`/user/${user_id}/list/${list_id}/edit`) // Programmatically navigate to the edit page URL
-            }
-          >
-            Edit
-          </button>
+                    type="button"
+                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                    onClick={() =>
+                      router.push(`/user/${user_id}/list/${list_id}/edit`)
+                    }
+                  >
+                    Edit
+                  </button>
                 </div>
-               
               </li>
-              
             ))}
           </div>
-         
         </div>
       </div>
     </>

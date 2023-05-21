@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import "../app/globals.css";
 import "./pages.css";
 import LoggedInHeader from "@/components/LoggedInHeader";
-import { getListItems, getCurrentID, ifOwnList } from "../utils/data.js";
+import { getListItems, getCurrentID, ifOwnList } from "../utils/data";
 import { Container } from "react-bootstrap";
 import { useRouter } from "next/navigation";
 
@@ -12,14 +12,17 @@ const ViewList = ({ list_id, user_id }) => {
   const [listTitle, setListTitle] = useState("");
   const [listAuthor, setListAuthor] = useState("");
   const [localID, setLocalID] = useState("");
+  
   const router = useRouter();
   //Function Definitions
   const checkSwitch = (is_checked) => {
     if (is_checked === true) {
       return "line-through ch w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300";
+    } else {
+      return "ch w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300";
     }
   };
-
+  
   //Extra re-route check (CURRENTLY BROKEN)
 
   // useEffect(() => {
@@ -115,10 +118,22 @@ const ViewList = ({ list_id, user_id }) => {
                   >
                     {listItem.item}
                   </p>
+                  <button
+            type="button"
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+            onClick={() =>
+              router.push(`/user/${user_id}/list/${list_id}/edit`) // Programmatically navigate to the edit page URL
+            }
+          >
+            Edit
+          </button>
                 </div>
+               
               </li>
+              
             ))}
           </div>
+         
         </div>
       </div>
     </>

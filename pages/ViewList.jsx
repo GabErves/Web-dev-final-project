@@ -96,7 +96,7 @@ const ViewList = ({ list_id, user_id }) => {
             </h3>
 
             {Object.entries(listItems).map(([order, listItem]) => (
-              <li className="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
+              <li className="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600 list-none">
                 <div className="flex items-center pl-3">
                   {/* <input
                   id="vue-checkbox"
@@ -111,6 +111,7 @@ const ViewList = ({ list_id, user_id }) => {
                 >
                   {listItem.item}
                 </label> */}
+                <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"></input>
                   <p
                     className={`${checkSwitch(
                       listItem.is_checked

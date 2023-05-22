@@ -5,6 +5,7 @@ import CreateList from "./CreateList";
 import { useRouter } from "next/router";
 
 const User = () => {
+  const { user, refreshUser, error, loading } = useUser();
   const [currentUser, setCurrentUser] = useState(null);
   const [listItems, setListItems] = useState(["", ""]);
   const router = useRouter();
@@ -30,7 +31,9 @@ const User = () => {
 
   return (
     <>
-      <LoggedInHeader />
+      {/* Switch between each header, each component might need this...? */}
+      {user && <LoggedInHeader />}
+      {!user && <Header />}
       <h3 className="text-center text-2xl font-bold">Your Lists</h3>
       {currentUser && currentUser.listItems && (
         <ul>
@@ -39,7 +42,6 @@ const User = () => {
           ))}
         </ul>
       )}
-    
     </>
   );
 };

@@ -6,10 +6,15 @@ import ListIcon from "../images/List-4.png";
 import "../app/globals.css";
 import "./Header.css";
 import { getCurrentUser, logoutUser, getCurrentID } from "../utils/data.js";
+import useUser from "@/hooks/useUser";
+import useUserMustBeLogged from "@/hooks/userUserMustBeLogged";
 
 import React from "react";
 
 const LoggedInHeader = () => {
+  // const { user, refreshUser, error, loading } = useUser();
+  // // we removed the useUser in the userMustBeLogged component, and now are supplying the user
+  // useUserMustBeLogged(user, "in", "/login");
   const router = useRouter();
   const [navbarOpen, setNavbarOpen] = useState(false);
   const [firstName, setFirstName] = useState("");
@@ -30,7 +35,7 @@ const LoggedInHeader = () => {
     const result = await logoutUser();
 
     if (result.success) {
-      router.push("/Login");
+      router.push("/HomePage");
     } else {
       console.error("Logout error:", result.message);
     }
@@ -82,6 +87,8 @@ const LoggedInHeader = () => {
               }
               id="example-navbar-danger"
             >
+              {/* Logged in */}
+
               <ul className="flex flex-col lg:flex-row list-none lg:ml-auto">
                 <li className="nav-item">
                   <a

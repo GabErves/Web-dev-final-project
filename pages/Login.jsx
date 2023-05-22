@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import LoggedInHeader from "@/components/LoggedInHeader";
 import React from "react";
 import Link from "next/link";
 import "../app/globals.css";
@@ -7,9 +8,14 @@ import { useReducer } from "react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import useUserMustBeLogged from "../hooks/userUserMustBeLogged";
+import useUser from "@/hooks/useUser";
 
 const Login = () => {
   //The currently logged in user's user_id
+  const { user } = useUser();
+  useUserMustBeLogged(user, "out", "/Homepage");
+  const router = useRouter();
+
   const [localID, setLocalID] = useState("");
 
   //Gets the user id to put into url link before anything else
@@ -23,10 +29,6 @@ const Login = () => {
   useEffect(() => {
     idFetcher();
   }, []);
-
-  //useUserMustBeLogged("out", "/profile");
-  //useUserMustBeLogged("out", `/user/${localID}`);
-  const router = useRouter();
 
   function reducer(state, action) {
     switch (action.type) {

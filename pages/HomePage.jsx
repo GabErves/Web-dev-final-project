@@ -1,27 +1,44 @@
 import React, { useEffect, useState } from "react";
 import Header from "@/components/Header";
-import { getLists, getListItems } from "../utils/data.js";
+import LoggedInHeader from "@/components/LoggedInHeader.jsx";
+import Link from "next/link";
+import { getLists, getListItems, getLatestUsers } from "../utils/data.js";
+import useUser from "@/hooks/useUser.js";
 
 const HomePage = () => {
   const [lists, setLists] = useState([]);
+  const [users, setUsers] = useState([]);
+  const { user, refreshUser, error, loading } = useUser();
+  // useEffect(() => {
+  //   const fetchLists = async () => {
+  //     try {
+  //       const { data: listsData } = await getLists();
+  //       const uniqueLists = listsData.filter(
+  //         (list, index, self) =>
+  //           index === self.findIndex((l) => l.list_id === list.list_id)
+  //       );
+
+  //       const listsWithItems = await Promise.all(
+  //         uniqueLists.map(async (list) => {
+  //           const { data: items } = await getListItems(list.list_id);
+  //           return { ...list, items };
+  //         })
+  //       );
+
+  //       setLists(listsWithItems);
+  //     } catch (error) {
+  //       console.log("Error fetching lists:", error);
+  //     }
+  //   };
+
+  //   fetchLists();
+  // }, []);
 
   useEffect(() => {
     const fetchLists = async () => {
       try {
-        const { data: listsData } = await getLists();
-        const uniqueLists = listsData.filter(
-          (list, index, self) =>
-            index === self.findIndex((l) => l.list_id === list.list_id)
-        );
-
-        const listsWithItems = await Promise.all(
-          uniqueLists.map(async (list) => {
-            const { data: items } = await getListItems(list.list_id);
-            return { ...list, items };
-          })
-        );
-
-        setLists(listsWithItems);
+        const { success, data, error } = await getLatestUsers();
+        setUsers(data);
       } catch (error) {
         console.log("Error fetching lists:", error);
       }
@@ -32,10 +49,34 @@ const HomePage = () => {
 
   return (
     <div>
-      <Header />
+      {/* Switch between each header, each component might need this...? */}
+      {user && <LoggedInHeader />}
+      {!user && <Header />}
       {/* Render other content */}
-      <h3 className="text-center text-5xl font-bold p-10">Homepage</h3>
+      <h3 className="text-center text-5xl font-bold p-10">
+        Welcome to Listomania!
+      </h3>
+
+      <h4 className="text-center text-2xl font-bold p-10">
+        Here are some of our latest users!
+      </h4>
       <div className="grid flex justify-center">
+        {users.map(({ username, user_id }) => {
+          return (
+            <div className="max-w-sm p-6 m-4 bg-white text-center border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+              <Link
+                key={user_id}
+                href={`/user/${user_id}`}
+                className="mb-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white"
+              >
+                {username}
+              </Link>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* <div className="grid flex justify-center">
         {lists.map((list) => (
           <div
             className="container text-center justify-items-center py-3"
@@ -72,7 +113,7 @@ const HomePage = () => {
             </div>
           </div>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };

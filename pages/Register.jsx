@@ -1,22 +1,40 @@
 "use client";
 import Header from "@/components/Header";
+import LoggedInHeader from "@/components/LoggedInHeader";
 import React from "react";
 import Login from "./Login";
 import "../app/globals.css";
-import { useState } from "react";
-import { registerUser } from "../utils/data";
+import { useState, useEffect } from "react";
+import { registerUser, getCurrentID } from "../utils/data";
 import { useReducer } from "react";
 import { useRouter } from "next/navigation";
+import useUser from "@/hooks/useUser";
 import useUserMustBeLogged from "../hooks/userUserMustBeLogged";
 
 const Register = () => {
-  //useUserMustBeLogged("out", "/User");
+  const { user } = useUser();
+  useUserMustBeLogged(user, "out", "/HomePage");
   const router = useRouter();
+
   //   const [fname, setFname] = useState("");
   //   const [lname, setLname] = useState("");
   //   const [email, setEmail] = useState("");
   //   const [password, setPassword] = useState("");
   //   const [phone, setPhone] = useState("");
+  const [localID, setLocalID] = useState(""); //Id of current user
+
+  useEffect(() => {
+    const idFetcher = async () => {
+      const hold = await getCurrentID();
+      if (hold) {
+        setLocalID(hold);
+      }
+    };
+
+    idFetcher();
+  }, []);
+
+  //Reroute if already logged in (checks if localID is valid)
 
   const keyText = (key, type) => {
     switch (key) {

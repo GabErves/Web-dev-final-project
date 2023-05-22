@@ -9,9 +9,10 @@ import "./pages.css";
 import { registerUser } from "../utils/data";
 import { useReducer } from "react";
 import { useRouter } from "next/navigation";
+import useUser from "@/hooks/useUser.js";
+import useUserMustBeLogged from "@/hooks/userUserMustBeLogged";
 
 import {
-  getCurrentUser,
   logoutUser,
   getLists,
   ifOwnList,
@@ -20,9 +21,13 @@ import {
 
 //Is now specific by user_id.
 const Profile = ({ user_id }) => {
+  const { user, refreshUser, error, loading } = useUser();
+  useUserMustBeLogged(user, "in", "/Login");
+
   const [localUsername, setLocalUsername] = useState("");
+
   const [localLists, setLocalLists] = useState({});
-  const router = useRouter();
+  const [localID, setLocalID] = useState(""); //Id of current user
 
   useEffect(() => {
     const fetchLists = async () => {
@@ -46,14 +51,18 @@ const Profile = ({ user_id }) => {
     fetchLists();
   }, [user_id]);
 
+  useEffect(() => {
+    const idFetcher = async () => {
+      const hold = await getCurrentID();
+      if (hold) {
+        setLocalID(hold);
+      }
+    };
+
+    idFetcher();
+  }, []);
+
   //Reroutes user to editing page, if its their list. key = list_id
-  const checkListOwner = (key) => {
-    if (ifOwnList(key, user_id)) {
-      return `/user/${user_id}/list/${key}/edit`; // Redirect to the list edit page
-    } else {
-      return `/user/${user_id}/list/${key}`;
-    }
-  };
 
   const redirectToViewer = (key) => {
     return `/user/${user_id}/list/${key}`;
@@ -64,31 +73,34 @@ const Profile = ({ user_id }) => {
     return `/user/${user_id}/list/${key}/edit`;
   };
 
-
   return (
     <>
       <LoggedInHeader />
       {/* <h3 className="text-start text-5xl p-10">Hello {localUsername}!</h3> */}
       <h3 className="text-center text-5xl font-bold p-10">Current Lists</h3>
-      {/* <p>{localLists}</p> */}
 
-     <div className="grid flex justify-center">
+      <div className="grid flex justify-center">
         {Object.entries(localLists).map(([key, value]) => {
           return (
-            <div className="container text-center justify-items-center py-3" key={key}>
+            <div
+              className="container text-center justify-items-center py-3"
+              key={key}
+            >
               <div className="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <Link href={redirectToViewer(key)}>
                   <div className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                     {value}
                   </div>
                 </Link>
-                <div className="padd2">
-                  <Link href={redirectToEdit(key)}>
-                    <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-                      Edit
-                    </button>
-                  </Link>
-                </div>
+                {localID === user_id && ( //Insert logged in condition here
+                  <div className="padd2">
+                    <Link href={redirectToEdit(key)}>
+                      <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                        Edit
+                      </button>
+                    </Link>
+                  </div>
+                )}
               </div>
             </div>
           );

@@ -9,6 +9,10 @@ import { useRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid"; //Used for generating uuids
 
 const CreateList = () => {
+  //Reroute if logged out
+  const { user, refreshUser, error, loading } = useUser();
+  useUserMustBeLogged(user, "in", "/Login");
+
   const [listItems, setListItems] = useState(["", ""]);
   const [listTitle, setListTitle] = useState("");
   const [localUsername, setLocalUsername] = useState("");
@@ -19,8 +23,6 @@ const CreateList = () => {
   const handleAddItem = () => {
     setListItems([...listItems, ""]);
   };
-
-  const { user } = useUser();
 
   const handleRemoveItem = (index) => {
     const updatedListItems = [...listItems];

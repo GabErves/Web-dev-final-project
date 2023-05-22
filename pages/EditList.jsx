@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import useUser from "../hooks/useUser";
+import useUserMustBeLogged from "../hooks/userUserMustBeLogged";
 import { useRouter } from "next/navigation";
 import "../app/globals.css";
 import "./pages.css";
@@ -14,16 +15,36 @@ import {
   deleteItems,
 } from "../utils/data";
 
-const EditList = ({ list_id }) => {
+const EditList = ({ list_id, user_id }) => {
+  //Reroute if logged out
+  const { user, refreshUser, error, loading } = useUser();
+  useUserMustBeLogged(user, "in", "/Login");
+  const router = useRouter();
+
   const [listItems, setListItems] = useState([]);
   const [listTitle, setListTitle] = useState("");
   const [localUsername, setLocalUsername] = useState("Username");
+  const [localID, setLocalID] = useState(""); //Id of current user
   const [submissionStatus, setSubmissionStatus] = useState(null);
   const [submissionMessage, setSubmissionMessage] = useState("");
 
-  const router = useRouter();
+  useEffect(() => {
+    const idFetcher = async () => {
+      const hold = await getCurrentID();
+      if (hold) {
+        setLocalID(hold);
+      }
+    };
 
-  const { user } = useUser();
+    idFetcher();
+  }, []);
+
+  //Reroute if not correct user to edit
+  //useUserMustBeLogged("in");
+
+  // if (localID !== user_id) {
+  //   router.push(`/`);
+  // }
 
   const handleAddItem = () => {
     setListItems([...listItems, { content: "", isChecked: false }]);
@@ -227,20 +248,40 @@ const EditList = ({ list_id }) => {
                         className="text-blue-600 hover:text-blue-800 focus:text-blue-800 focus:outline-none mr-2"
                         onClick={() => handleMoveItemUp(index)}
                       >
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18" />
-</svg>
-
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="w-6 h-6"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18"
+                          />
+                        </svg>
                       </button>
                       <button
                         type="button"
                         className="text-blue-600 hover:text-blue-800 focus:text-blue-800 focus:outline-none"
                         onClick={() => handleMoveItemDown(index)}
                       >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
-</svg>
-
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="w-6 h-6"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"
+                          />
+                        </svg>
                       </button>
                     </div>
                   )}

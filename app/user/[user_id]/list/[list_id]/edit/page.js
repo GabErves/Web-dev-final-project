@@ -12,7 +12,10 @@ const Page = (props) => {
   return (
     <>
       {/* <p>Editing Page Stub</p> */}
-      <EditList list_id={props.params.list_id}></EditList>
+      <EditList
+        list_id={props.params.list_id}
+        user_id={props.params.user_id}
+      ></EditList>
     </>
   );
 };

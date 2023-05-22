@@ -1,9 +1,9 @@
-"use client"
+
 import LoggedInHeader from "../components/LoggedInHeader";
 import React, { useState, useEffect } from "react";
 import { getCurrentUser } from "../utils/data";
 import CreateList from "./CreateList";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 const User = () => {
   const [currentUser, setCurrentUser] = useState(null);

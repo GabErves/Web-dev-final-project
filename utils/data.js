@@ -319,11 +319,15 @@ const ifOwnList = async (listId, userId) => {
     .select("*")
     .eq("list_id", listId);
 
-  if (data.user_id === userId) {
-    return true;
-  } else {
-    return false;
-  }
+  let foundMatchingUserId = false;
+
+  data.forEach((entry) => {
+    if (entry.user_id === userId) {
+      foundMatchingUserId = true;
+    }
+  });
+
+  return foundMatchingUserId;
 };
 
 // const listId = 'list_id'; // Provide the actual listId
@@ -409,6 +413,26 @@ const updateListItems = async (listItems) => {
   }
 };
 
+const getLatestUsers = async (num = 5) => {
+  const { data, error } = await supabase
+    .from("profile")
+    .select("username, user_id")
+    .order("created_at", { ascending: false })
+    .limit(num);
+
+  if (error) {
+    return {
+      success: false,
+      error,
+    };
+  }
+
+  return {
+    success: true,
+    data,
+  };
+};
+
 export {
   getLists,
   ifOwnList,
@@ -422,7 +446,6 @@ export {
   getUserByUsername,
   updateList,
   deleteItems,
-  updateListItems
-
-
+  updateListItems,
+  getLatestUsers,
 };

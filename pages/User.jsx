@@ -1,4 +1,4 @@
-
+"use client"
 import LoggedInHeader from "../components/LoggedInHeader";
 import React, { useState, useEffect } from "react";
 import { getCurrentUser } from "../utils/data";

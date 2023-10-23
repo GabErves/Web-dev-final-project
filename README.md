@@ -46,7 +46,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ![Screenshot 2023-10-23 163928](https://github.com/GabErves/Web-dev-final-project/assets/97007581/5e5b3328-6fbd-4599-9e75-fcd003dc3b31)
 
-This is some of the backend designed in Supabase
+<b> This is some of the backend designed in Supabase <b>
 
 ![Screenshot 2023-10-23 164005](https://github.com/GabErves/Web-dev-final-project/assets/97007581/ec63ca99-bd84-4ce3-be6c-a581b04507b2)
 
